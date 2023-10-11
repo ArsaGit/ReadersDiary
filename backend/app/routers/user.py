@@ -3,10 +3,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.configs.database import get_db
 from app.models.user_models import User
-from backend.app.schemas.pydantic.user import (UserSchema,
-                                               UserResponse,
-                                               UserLogin,
-                                               TokenResponse)
+from app.schemas.pydantic.user import (UserSchema,
+                                       UserResponse,
+                                       UserLogin,
+                                       TokenResponse)
 from app.services.auth import create_access_token
 
 router = APIRouter(prefix="/v1/user")
