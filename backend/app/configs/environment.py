@@ -1,7 +1,7 @@
 from functools import lru_cache
 import os
 
-from pydantic import RedisDsn
+from pydantic import RedisDsn, PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -13,8 +13,6 @@ def get_env_filename():
 
 class EnvironmentSettings(BaseSettings):
     APP_NAME: str
-    DATABASE_DIALECT: str
-    DATABASE_URI: str
     DEBUG_MODE: bool
     HOST_URL: str
     HOST_PORT: int
@@ -25,6 +23,13 @@ class EnvironmentSettings(BaseSettings):
     REDIS_PORT: int
     REDIS_DB: int
     REDIS_URL: RedisDsn
+
+    POSTGRES_HOST: str
+    POSTGRES_PORT: int
+    POSTGRES_DB: str
+    POSTGRES_USER: str
+    POSTGRES_PASSWORD: str
+    POSTGRES_URL: PostgresDsn
 
     model_config = SettingsConfigDict(
         env_file=get_env_filename(),

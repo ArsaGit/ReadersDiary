@@ -15,16 +15,11 @@ class UserSchema(BaseModel):
 
 
 class UserResponse(BaseModel):
+    model_config = config
     id: str = Field(title="User's id",
                     description="User's id")
-    login: str = Field(title="User's login",
-                       description="User's login")
     email: EmailStr = Field(title="User's email",
                             description="User's email")
-    password: str = Field(title="User's password",
-                          description="User's password")
-    access_token: str = Field(title="User’s token",
-                              description="User’s token")
 
 
 class TokenResponse(BaseModel):

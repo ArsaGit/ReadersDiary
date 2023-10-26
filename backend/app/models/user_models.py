@@ -29,7 +29,7 @@ class User(base_models.Base):
 
     id: Mapped[str] = mapped_column(primary_key=True)
     login: Mapped[str]
-    _password: Mapped[str]
+    _password: Mapped[bytes]
     email: Mapped[str]
 
     reviews: Mapped[List["review_models.Review"]] = relationship(

@@ -1,4 +1,3 @@
-
 from collections.abc import AsyncGenerator
 
 from sqlalchemy.ext.asyncio import (
@@ -10,9 +9,8 @@ from app.configs.environment import get_environment_variables
 
 
 env = get_environment_variables()
-DATABASE_URL = f"{env.DATABASE_DIALECT}:{env.DATABASE_URI}"
 
-Engine = create_async_engine(DATABASE_URL,
+Engine = create_async_engine(env.POSTGRES_URL.unicode_string(),
                              echo=env.DEBUG_MODE,
                              future=True)
 

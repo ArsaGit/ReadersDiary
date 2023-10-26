@@ -1,13 +1,13 @@
 from asyncpg import UniqueViolationError
 from fastapi import HTTPException, status
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession, AsyncAttrs
 from sqlalchemy.orm import DeclarativeBase
 
 from app.configs.database import Engine
 
 
-class Base(DeclarativeBase):
+class Base(AsyncAttrs, DeclarativeBase):
     async def save(self, db_session: AsyncSession):
         """
 
