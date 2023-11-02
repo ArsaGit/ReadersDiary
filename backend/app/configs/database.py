@@ -1,26 +1,36 @@
-
 from collections.abc import AsyncGenerator
-
 from sqlalchemy.ext.asyncio import (
     create_async_engine,
-    async_sessionmaker
+    async_sessionmaker,
 )
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
-from app.configs.environment import get_environment_variables
+from app.configs.environment import get_config
 
 
-env = get_environment_variables()
-DATABASE_URL = f"{env.DATABASE_DIALECT}:{env.DATABASE_URI}"
+env = get_config()
+ASYNC_DATABASE_URL = env.POSTGRES_ASYNC_URL.unicode_string()
+DATABASE_URL = env.POSTGRES_URL.unicode_string()
 
-Engine = create_async_engine(DATABASE_URL,
+engine = create_async_engine(ASYNC_DATABASE_URL,
                              echo=env.DEBUG_MODE,
                              future=True)
+init_engine = create_engine(DATABASE_URL,
+                            future=True)
 
-AsyncSessionFactory = async_sessionmaker(Engine,
-                                         autoflush=False,
-                                         expire_on_commit=False,)
+async_session_factory = async_sessionmaker(engine,
+                                           autoflush=False,
+                                           expire_on_commit=False,)
+session_factory = sessionmaker(init_engine,
+                               autoflush=True,
+                               expire_on_commit=False,)
 
 
-async def get_db() -> AsyncGenerator:
-    async with AsyncSessionFactory() as session:
+async def get_db_session() -> AsyncGenerator:
+    async with async_session_factory() as session:
         yield session
+
+
+def get_init_db():
+    return session_factory()

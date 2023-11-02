@@ -1,11 +1,11 @@
 import uvicorn
 
-from app.configs.environment import get_environment_variables
+from app.configs.environment import get_config
 from app.app import create_app
 
 
 app = create_app()
-env = get_environment_variables()
+env = get_config()
 
 if __name__ == "__main__":
     uvicorn.run("main:app",

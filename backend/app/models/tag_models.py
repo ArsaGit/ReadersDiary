@@ -7,7 +7,7 @@ from app.models import base_models
 
 
 class Tag(base_models.Base):
-    __tablename__ = "tags"
+    __tablename__ = "tag"
 
     id: Mapped[str] = mapped_column(primary_key=True)
     name: Mapped[str]

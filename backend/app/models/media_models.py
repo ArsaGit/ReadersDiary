@@ -16,14 +16,14 @@ from app.models import (
 
 
 class Media(base_models.Base):
-    __tablename__ = "medias"
+    __tablename__ = "media"
 
     id: Mapped[str] = mapped_column(primary_key=True)
     media_type: Mapped[str]
     title: Mapped[str]
-    status: Mapped[str] = mapped_column(ForeignKey("statuses.status"))
+    status: Mapped[str] = mapped_column(ForeignKey("status.status"))
     description: Mapped[str]
-    cover_id: Mapped[Optional[str]] = mapped_column(ForeignKey("images.id"))
+    cover_id: Mapped[Optional[str]] = mapped_column(ForeignKey("image.id"))
     release_date: Mapped[datetime]
 
     cover: Mapped["attachment_models.Image"] = relationship()
@@ -38,12 +38,12 @@ class Media(base_models.Base):
 
 
 class Book(Media):
-    __tablename__ = "books"
+    __tablename__ = "book"
 
-    id: Mapped[str] = mapped_column(ForeignKey("medias.id"), primary_key=True)
+    id: Mapped[str] = mapped_column(ForeignKey("media.id"), primary_key=True)
     n_pages: Mapped[int]
     n_chapters: Mapped[int]
-    author_id: Mapped[str] = mapped_column(ForeignKey("authors.id"))
+    author_id: Mapped[str] = mapped_column(ForeignKey("author.id"))
 
     author: Mapped["Author"] = relationship(back_populates="books")
 
@@ -54,9 +54,9 @@ class Book(Media):
 
 
 class Movie(Media):
-    __tablename__ = "movies"
+    __tablename__ = "movie"
 
-    id: Mapped[str] = mapped_column(ForeignKey("medias.id"), primary_key=True)
+    id: Mapped[str] = mapped_column(ForeignKey("media.id"), primary_key=True)
 
     __mapper_args__ = {
         "polymorphic_identity": "movie",
@@ -67,7 +67,7 @@ class Movie(Media):
 class Series(Media):
     __tablename__ = "series"
 
-    id: Mapped[str] = mapped_column(ForeignKey("medias.id"), primary_key=True)
+    id: Mapped[str] = mapped_column(ForeignKey("media.id"), primary_key=True)
     n_seasons: Mapped[int]
 
     seasons: Mapped[List["Season"]] = relationship()
@@ -79,18 +79,18 @@ class Series(Media):
 
 
 class Season(base_models.Base):
-    __tablename__ = "seasons"
+    __tablename__ = "season"
 
     id: Mapped[str] = mapped_column(primary_key=True)
-    series_id: Mapped[str] = mapped_column(ForeignKey("medias.id"))
+    series_id: Mapped[str] = mapped_column(ForeignKey("media.id"))
     title: Mapped[str]
     description: Mapped[str]
-    status: Mapped[str] = mapped_column(ForeignKey("statuses.status"))
+    status: Mapped[str] = mapped_column(ForeignKey("status.status"))
     n_episodes: Mapped[int]
 
 
 class Author(base_models.Base):
-    __tablename__ = "authors"
+    __tablename__ = "author"
 
     id: Mapped[str] = mapped_column(primary_key=True)
     name: Mapped[str]
@@ -99,7 +99,7 @@ class Author(base_models.Base):
 
 
 class Genre(base_models.Base):
-    __tablename__ = "genres"
+    __tablename__ = "genre"
 
     id: Mapped[str] = mapped_column(primary_key=True)
     name: Mapped[str]

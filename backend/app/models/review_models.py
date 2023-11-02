@@ -16,17 +16,17 @@ from app.models import (
 
 
 class Review(base_models.Base):
-    __tablename__ = "reviews"
+    __tablename__ = "review"
 
     id: Mapped[str] = mapped_column(primary_key=True)
     media_type: Mapped[str]
     rating: Mapped[int]
     body: Mapped[str]
     user_id: Mapped[str] = mapped_column(
-        ForeignKey("users.id")
+        ForeignKey("user.id")
     )
     media_id: Mapped[str] = mapped_column(
-        ForeignKey("medias.id")
+        ForeignKey("media.id")
     )
     start_date: Mapped[datetime]
     end_date: Mapped[Optional[datetime]]
@@ -43,9 +43,9 @@ class Review(base_models.Base):
 
 
 class BookReview(Review):
-    __tablename__ = "book_reviews"
+    __tablename__ = "book_review"
 
-    id: Mapped[str] = mapped_column(ForeignKey("reviews.id"), primary_key=True)
+    id: Mapped[str] = mapped_column(ForeignKey("review.id"), primary_key=True)
     book_type: Mapped[str]
 
     __mapper_args__ = {
