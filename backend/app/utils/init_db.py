@@ -5,7 +5,6 @@ from app.models import (
     media_models,
     review_models,
     status_models,
-    tag_models,
     user_models
 )
 

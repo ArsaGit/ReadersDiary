@@ -9,6 +9,7 @@ from sqlalchemy.orm import (
 )
 
 from app.models import base_models, review_models
+from app.utils.security import pwd_context
 
 
 class User(base_models.Base):
@@ -28,3 +29,14 @@ class User(base_models.Base):
     reviews: Mapped[List["review_models.Review"]] = relationship(
         back_populates="user",
     )
+
+    @property
+    def password(self):
+        return self.hashed_password
+
+    @password.setter
+    def password(self, password: str):
+        self.hashed_password = pwd_context.hash(password)
+
+    def check_password(self, password: str) -> bool:
+        return pwd_context.verify(password, self.password)

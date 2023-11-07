@@ -3,7 +3,7 @@ from fastapi import FastAPI, Depends
 from app.utils.init_db import init_db
 from app.routers.users import users_router
 from app.routers.auth import auth_router
-from app.services.auth import get_current_active_user
+from app.services.auth_service import get_current_active_user
 
 
 def create_app():

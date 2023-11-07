@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import (
     Depends,
     status,
@@ -5,13 +6,14 @@ from fastapi import (
     Request
 )
 from fastapi.exceptions import HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.configs.environment import get_config
-from app.configs.database import get_db_session
 from app.schemas.api.user import UserSchema, UserCreate
-from app.repositories import user as user_repo
-from app.services.auth import get_current_active_user
+from app.services.auth_service import (
+    get_current_active_user,
+    get_current_active_superuser,
+)
+from app.services.user_service import UserService
 
 config = get_config()
 users_router = r = APIRouter()
@@ -21,10 +23,13 @@ users_router = r = APIRouter()
         response_model=UserSchema,
         status_code=status.HTTP_201_CREATED,
         response_model_exclude_none=True)
-async def create_user(request: Request,
-                      payload: UserCreate,
-                      db: AsyncSession = Depends(get_db_session)):
-    user = await user_repo.create_user(db, payload)
+async def create_user(
+    request: Request,
+    payload: UserCreate,
+    service: UserService = Depends(),
+    current_user=Depends(get_current_active_superuser)
+):
+    user = await service.create(payload)
     return user
 
 
@@ -43,10 +48,13 @@ async def get_users_me(
        response_model=UserSchema,
        status_code=status.HTTP_200_OK,
        response_model_exclude_none=True)
-async def get_user(request: Request,
-                   user_id: int,
-                   db: AsyncSession = Depends(get_db_session)):
-    user = await user_repo.get_user(db, user_id)
+async def get_user(
+    request: Request,
+    user_id: int,
+    service: UserService = Depends(),
+    current_user=Depends(get_current_active_superuser),
+):
+    user = await service.get(user_id)
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail="User not found")
@@ -54,10 +62,13 @@ async def get_user(request: Request,
 
 
 @r.get("/users",
-       response_model=list[UserSchema],
+       response_model=List[UserSchema],
        status_code=status.HTTP_200_OK,
        response_model_exclude_none=True)
-async def get_users_list(request: Request,
-                         db: AsyncSession = Depends(get_db_session)):
-    users = await user_repo.get_users(db)
+async def get_users_list(
+    request: Request,
+    service: UserService = Depends(),
+    current_user=Depends(get_current_active_superuser),
+):
+    users = await service.get_list()
     return users
