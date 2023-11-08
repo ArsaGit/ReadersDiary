@@ -1,10 +1,8 @@
 from fastapi import APIRouter, status, Request
 
-router = APIRouter()
+health_router = r = APIRouter()
 
 
-@router.get("/fastapi", status_code=status.HTTP_200_OK)
+@r.get("/", status_code=status.HTTP_200_OK)
 async def fastapi_check(request: Request):
-    return {
-        "status": "OK"
-    }
+    return {"message": "Hello World"}
